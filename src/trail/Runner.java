@@ -6,6 +6,14 @@ public class Runner {
 	private int bibNumber;
 	private Record lastRecord = null;
 	
+	public int getLastLocNum(){
+		return lastRecord.getLocation().getOrderNum();
+	}
+		
+	public long getLastTime(){
+		return lastRecord.getTime();
+	}
+	
 	public Record getLastRecord() {
 		return lastRecord;
 	}

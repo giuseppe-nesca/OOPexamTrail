@@ -100,7 +100,18 @@ public class Trail {
 	public List<String> getDelegates() {
 		return 
 				delegates.values().stream()
-				.sorted()
+				.sorted(new Comparator<Delegate>() {
+
+					@Override
+					public int compare(Delegate d1, Delegate d2) {
+						int checkName = d1.getNome().compareTo(d2.getNome());
+						int checkSurname = d1.getCognome().compareTo(d2.getCognome());
+						if (checkSurname == 0){
+							return checkName;
+						}else
+							return checkSurname;
+					}
+				})
 				.map(d -> d.toString())
 				.collect(Collectors.toList())
 				;
@@ -121,7 +132,7 @@ public class Trail {
 	public List<String> getDelegates(String location) {
 		return 
 				getLocation(location).getDelegates().stream()
-				.sorted()
+				.sorted(Comparator.comparing(Delegate::getCognome).thenComparing(Delegate::getNome))
 				.map(d->d.toString())
 				.collect(Collectors.toList())
 				;
@@ -130,14 +141,19 @@ public class Trail {
 	public long recordPassage(String delegate, String location, int bibNumber)
 			throws TrailException {
 		Delegate d = delegates.get(delegate);
-		Location l = d.getLocation(location);
-		if (d == null || l == null || bibNumber > runners.size()) {
+		if (d == null) {
+			throw new TrailException("delegate or location or runner not found");
+		}
+		//Location l = d.getLocation(location);
+		Location l = d.getLocations().get(location);
+		if (l == null || bibNumber > runners.size()) {
 			throw new TrailException("delegate or location or runner not found");
 		}
 		long oraPassaggio = System.currentTimeMillis();
 		Runner runner = getRunner(bibNumber);
 		Record record = new Record(runner, l, oraPassaggio);
 		l.insertRecord(bibNumber, record);
+		runner.setLastRecord(record);
 		return oraPassaggio;
 	}
 
@@ -160,20 +176,17 @@ public class Trail {
 	}
 
 	public List<Runner> getRanking() {
-		TreeSet<Runner> sol = new TreeSet<Runner>(new Comparator<Runner>() {
-
-			@Override
-			public int compare(Runner o1, Runner o2) {
-				if(o1.getBibNumber() == o2.getBibNumber()) return 0;
-				
-				return (int) (o1.getLastRecord().getTime() - o2.getLastRecord().getTime());
-			}
-		});
-		path.stream()
-		.flatMap(l -> l.getRank().stream())
-		.collect(Collectors.toList()).forEach(r -> {
-			sol.add(r);
-		});;
-		return sol.stream().collect(Collectors.toList());
+		return 
+//				runners.stream()
+//				.map(Runner::getLastRecord)
+//				.sorted(Comparator.comparing(Record::getTime))
+//				.sorted((x,y) -> y.getLocation().getOrderNum() - x.getLocation().getOrderNum())
+//				.map(Record::getRunner)
+//				.distinct()
+//				.collect(Collectors.toList());
+				runners.stream()
+				.sorted(Comparator.comparing(Runner::getLastLocNum, Comparator.reverseOrder())
+						.thenComparing(Runner::getLastTime))
+				.collect(Collectors.toList());
 	}
 }
