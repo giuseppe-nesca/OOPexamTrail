@@ -129,12 +129,23 @@ public class Trail {
 
 	public long recordPassage(String delegate, String location, int bibNumber)
 			throws TrailException {
-		return -1;
+		Delegate d = delegates.get(delegate);
+		Location l = d.getLocation(location);
+		if (d == null || l == null || bibNumber > runners.size()) {
+			throw new TrailException("delegate or location or runner not found");
+		}
+		long oraPassaggio = System.currentTimeMillis();
+		l.insertRecord(bibNumber, oraPassaggio);
+		return oraPassaggio;
 	}
 
 	public long getPassTime(String position, int bibNumber)
 			throws TrailException {
-		return -1;
+		Location l = getLocation(position);
+		if ( l == null || bibNumber > runners.size() ){
+			throw new TrailException("number or position not found");
+		}
+		return l.getRecord(bibNumber);
 	}
 
 	public List<Runner> getRanking(String location) {
