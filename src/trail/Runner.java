@@ -4,7 +4,18 @@ public class Runner {
 	
 	private String name,surname;
 	private int bibNumber;
+	private Record lastRecord = null;
 	
+	public Record getLastRecord() {
+		return lastRecord;
+	}
+
+
+	public void setLastRecord(Record lastRecord) {
+		this.lastRecord = lastRecord;
+	}
+
+
 	public Runner(String name, String surname, int bibNumber){
 		this.name = name;
 		this.surname = surname;

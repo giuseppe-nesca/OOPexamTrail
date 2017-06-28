@@ -135,7 +135,9 @@ public class Trail {
 			throw new TrailException("delegate or location or runner not found");
 		}
 		long oraPassaggio = System.currentTimeMillis();
-		l.insertRecord(bibNumber, oraPassaggio);
+		Runner runner = getRunner(bibNumber);
+		Record record = new Record(runner, l, oraPassaggio);
+		l.insertRecord(bibNumber, record);
 		return oraPassaggio;
 	}
 
@@ -145,11 +147,16 @@ public class Trail {
 		if ( l == null || bibNumber > runners.size() ){
 			throw new TrailException("number or position not found");
 		}
-		return l.getRecord(bibNumber);
+		Record record = l.getRecord(bibNumber);
+		if (record == null) {
+			return -1;
+		}else{
+			return record.getTime();
+		}
 	}
 
 	public List<Runner> getRanking(String location) {
-		return null;
+		return getLocation(location).getRank();
 	}
 
 	public List<Runner> getRanking() {
