@@ -2,8 +2,8 @@ package trail;
 
 public class Runner {
 	
-	String name,surname;
-	int bibNumber;
+	private String name,surname;
+	private int bibNumber;
 	
 	public Runner(String name, String surname, int bibNumber){
 		this.name = name;
