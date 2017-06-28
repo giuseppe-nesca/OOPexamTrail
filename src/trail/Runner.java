@@ -1,18 +1,27 @@
 package trail;
 
 public class Runner {
+	
+	String name,surname;
+	int bibNumber;
+	
+	public Runner(String name, String surname, int bibNumber){
+		this.name = name;
+		this.surname = surname;
+		this.bibNumber = bibNumber;
+	}
 
     
     public int getBibNumber(){
-        return -1;
+        return bibNumber;
     }
 
     public String getName(){
-        return "";
+        return name;
     }
 
     public String getSurname(){
-        return "";
+        return surname;
     }
 
 }
