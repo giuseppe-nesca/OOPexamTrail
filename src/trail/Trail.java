@@ -160,6 +160,20 @@ public class Trail {
 	}
 
 	public List<Runner> getRanking() {
-		return null;
+		TreeSet<Runner> sol = new TreeSet<Runner>(new Comparator<Runner>() {
+
+			@Override
+			public int compare(Runner o1, Runner o2) {
+				if(o1.getBibNumber() == o2.getBibNumber()) return 0;
+				
+				return (int) (o1.getLastRecord().getTime() - o2.getLastRecord().getTime());
+			}
+		});
+		path.stream()
+		.flatMap(l -> l.getRank().stream())
+		.collect(Collectors.toList()).forEach(r -> {
+			sol.add(r);
+		});;
+		return sol.stream().collect(Collectors.toList());
 	}
 }
